@@ -54,7 +54,14 @@ namespace NEventStore.Persistence.MongoDB
                     new BsonDocument
                     {
                         {MongoCommitFields.StreamRevision, streamRevision++},
-                        {MongoCommitFields.Payload, new BsonDocumentWrapper(typeof (EventMessage), serializer.Serialize(e))}
+                        //---------------------------
+                        //Smart mobile Fork: Begin
+                        //---------------------------
+                        //{MongoCommitFields.Payload, new BsonDocumentWrapper(typeof (EventMessage), serializer.Serialize(e))}
+                        {MongoCommitFields.Payload, new BsonDocumentWrapper(serializer.Serialize(e))} //Upgraded to Mongo C# Driver 2.x. If needed, a serializer can be obtained from BsonSerializer.LookupSerializer(typeof(EventMessage));
+                        //---------------------------
+                        //Smart mobile Fork: End
+                        //---------------------------
                     });
             return new BsonDocument
             {
