@@ -1,4 +1,6 @@
-﻿namespace NEventStore.Persistence.MongoDB
+﻿using MongoDB.Bson.Serialization;
+
+namespace NEventStore.Persistence.MongoDB
 {
     using System;
     using System.Collections.Generic;
@@ -16,14 +18,30 @@
     {
         public static Dictionary<Tkey, Tvalue> AsDictionary<Tkey, Tvalue>(this BsonValue bsonValue)
         {
-            using (BsonReader reader = BsonReader.Create(bsonValue.ToJson()))
+            //---------------------------
+            //Smart mobile Fork: Begin
+            //---------------------------
+
+            //using (BsonReader reader = BsonReader.Create(bsonValue.ToJson()))
+            //{
+            //    var dictionarySerializer = new DictionarySerializer<Tkey, Tvalue>();
+            //    object result = dictionarySerializer.Deserialize(reader,
+            //        typeof(Dictionary<Tkey, Tvalue>),
+            //        new DictionarySerializationOptions());
+            //    return (Dictionary<Tkey, Tvalue>)result;
+            //}
+
+            using (BsonReader reader = new JsonReader(bsonValue.ToJson()))
             {
-                var dictionarySerializer = new DictionarySerializer<Tkey, Tvalue>();
-                object result = dictionarySerializer.Deserialize(reader,
-                    typeof(Dictionary<Tkey, Tvalue>),
-                    new DictionarySerializationOptions());
+                var dictionarySerializer = new CustomDictionarySerializer<Tkey, Tvalue>();
+                var context = BsonDeserializationContext.CreateRoot(reader: reader, configurator: null);
+                object result = dictionarySerializer.Deserialize(context, new BsonDeserializationArgs());
                 return (Dictionary<Tkey, Tvalue>)result;
             }
+
+            //---------------------------
+            //Smart mobile Fork: End
+            //---------------------------
         }
 
         public static BsonDocument ToMongoCommit(this CommitAttempt commit, LongCheckpoint checkpoint, IDocumentSerializer serializer)
@@ -174,4 +192,22 @@
                     );
         }
     }
+
+    //---------------------------
+    //Smart mobile Fork: Begin
+    //---------------------------
+
+    public class CustomDictionarySerializer<TKey, TValue>
+        : DictionarySerializerBase<Dictionary<TKey, TValue>, TKey, TValue>
+    {
+        [Obsolete]
+        protected override Dictionary<TKey, TValue> CreateInstance()
+        {
+            return new Dictionary<TKey, TValue>();
+        }
+    }
+
+    //---------------------------
+    //Smart mobile Fork: End
+    //---------------------------
 }
