@@ -35,6 +35,9 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="NEventStore, Version=5.1.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\NEventStore.5.1.1\lib\net40\NEventStore.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -67,10 +70,6 @@
     <ProjectReference Include="..\NEventStore.Persistence.MongoDB\NEventStore.Persistence.MongoDB.csproj">
       <Project>{32ADD8CE-0F3F-41D8-BFA1-6E5D685E64DD}</Project>
       <Name>NEventStore.Persistence.MongoDB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore\NEventStore.csproj">
-      <Project>{03946843-F343-419C-88EF-3E446D08DFA6}</Project>
-      <Name>NEventStore</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\dependencies\NEventStore\src\NEventStore.Persistence.AcceptanceTests\NEventStore.Persistence.AcceptanceTests.csproj">
       <Project>{3FE594FE-16FF-4405-97D5-5A58FB12520B}</Project>
